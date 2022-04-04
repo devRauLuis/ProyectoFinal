@@ -6,10 +6,12 @@
 
 main {
     flex: 1;
+    background: rgb(255, 255, 255);
+    background: linear-gradient(167deg, rgba(255, 255, 255, 1) 0%, rgba(221, 228, 229, 0.8953782196472339) 55%, rgba(58, 102, 178, 0.6992997882746849) 87%, rgba(58, 178, 134, 0.7609244381346288) 96%);
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    /*height: 100%;*/
 }
 
 .top-row {
@@ -21,15 +23,15 @@ main {
     align-items: center;
 }
 
-    .top-row ::deep a, .top-row .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-    }
+.top-row ::deep a, .top-row .btn-link {
+    white-space: nowrap;
+    margin-left: 1.5rem;
+}
 
-    .top-row a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+.top-row a:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 @media (max-width: 640.98px) {
     .top-row:not(.auth) {
