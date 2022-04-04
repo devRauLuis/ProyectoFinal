@@ -1,0 +1,103 @@
+@page "/registro-aseguradoras"
+@page "/registro-aseguradoras/{AseguradoraId:int?}"
+
+<h1>Registro Aseguradoras</h1>
+
+<RadzenCard>
+    <EditForm OnValidSubmit="@Guardar" Model="Aseguradora">
+        <DataAnnotationsValidator/>
+        <div class="w-100">
+            <div class="form-group">
+                <label class='form-label d-block'>ID: </label>
+                <RadzenNumeric ShowUpDown="false" TValue="int?" @bind-Value="AseguradoraId"/>
+                <RadzenButton Icon="search" ButtonStyle="ButtonStyle.Primary" Click="@(args => Buscar(AseguradoraId))"/>
+            </div>
+            <div class="form-group w-50">
+                <label class='form-label d-block'>Nombre: </label>
+                <RadzenTextBox @bind-Value="Aseguradora.Nombre" class="form-control"/>
+                <ValidationMessage For="@(() => Aseguradora.Nombre)"/>
+            </div>
+            <div class="form-group w-50">
+                <label class='form-label d-block'>Telefono: </label>
+                <RadzenTextBox @bind-Value="Aseguradora.Telefono" class="form-control"/>
+                <ValidationMessage For="@(() => Aseguradora.Telefono)"/>
+            </div>
+            <div class="form-group w-50">
+                <label class='form-label d-block'>Correo: </label>
+                <RadzenTextBox @bind-Value="Aseguradora.Correo" class="form-control"/>
+                <ValidationMessage For="@(() => Aseguradora.Correo)"/>
+            </div>
+
+        </div>
+        <div class="">
+
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Guardar" Icon="save" ButtonStyle="ButtonStyle.Success"/>
+            <RadzenButton Click="@(args => Nuevo())" Text="Nuevo" Icon="add_box" ButtonStyle="ButtonStyle.Secondary"/>
+            <RadzenButton Click="@(args => Eliminar())" Text="Eliminar" Icon="delete" ButtonStyle="ButtonStyle.Danger"/>
+
+        </div>
+    </EditForm>
+</RadzenCard>
+
+@code {
+
+    private Aseguradora? Aseguradora { get; set; }
+
+    [Parameter]
+    public int? AseguradoraId { get; set; }
+
+    [Inject]
+    public IUnitOfWork? UnitOfWork { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Buscar(AseguradoraId);
+    }
+
+    public void Buscar(int? id)
+    {
+        if (id > 0)
+        {
+            var encontrado = UnitOfWork?.Aseguradoras.GetById(id);
+            if (encontrado is not null)
+            {
+                Aseguradora = encontrado;
+                Console.WriteLine(encontrado.Dump());
+            }
+            else
+            {
+                NotificationService.Notify(Notifications.Error("No se ha encontrado el producto!"));
+                Aseguradora = new Aseguradora();
+            }
+        }
+        else
+        {
+            Aseguradora = new Aseguradora();
+        }
+    }
+
+    private void Guardar()
+    {
+        if (Aseguradora != null) UnitOfWork?.Aseguradoras.Add(Aseguradora, Aseguradora.AseguradoraId);
+        GuardarCambios();
+    }
+
+    private void Nuevo()
+    {
+        Aseguradora = new Aseguradora();
+    }
+
+    private void Eliminar()
+    {
+        if (Aseguradora != null) UnitOfWork?.Aseguradoras.Delete(Aseguradora.AseguradoraId);
+    }
+
+    private void GuardarCambios()
+    {
+        if (UnitOfWork != null && UnitOfWork.Save()) NotificationService.Notify(Notifications.Success("Operación realizada con éxito!"));
+        else NotificationService.Notify(Notifications.Error("Ocurrió un error"));
+    }
+
+}

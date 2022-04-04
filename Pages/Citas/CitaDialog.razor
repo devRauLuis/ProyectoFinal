@@ -1,0 +1,176 @@
+@using ServiceStack
+@inject DialogService DialogService
+
+<EditForm Model="Cita" OnValidSubmit=@OnSubmit>
+    <DataAnnotationsValidator/>
+
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Motivo"/>
+        </div>
+        <div class="col">
+            <RadzenTextBox @bind-Value="@Cita.Motivo" Name="Motivo"/>
+            <ValidationMessage For="@(() => Cita.Motivo)"/>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Inicio"/>
+        </div>
+        <div class="col">
+            <RadzenDatePicker @bind-Value="@Cita.Inicio" Name="Inicio" ShowTime="true"/>
+            <ValidationMessage For="@(() => Cita.Inicio)"/>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Fin"/>
+        </div>
+        <div class="col">
+            <RadzenDatePicker Name="Fin" @bind-Value="@Cita.Fin" ShowTime="true"/>
+            <ValidationMessage For="@(() => Cita.Fin)"/>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Paciente"/>
+        </div>
+        <div class="col">
+            <RadzenDropDown AllowFiltering AllowClear TValue="Paciente" @bind-Value="Cita.Paciente" LoadData="@LoadData"
+                            Data="@PacientesList" Placeholder="Seleccione un paciente...">
+                <Template Context="dropdownContext">
+                    @((dropdownContext as Paciente)?.Nombre + " " + (dropdownContext as Paciente)?.Apellido)
+                </Template>
+            </RadzenDropDown>
+            <ValidationMessage For="@(() => Cita.Paciente)"/>
+        </div>
+    </div>
+    <div style="margin-bottom: 16px">
+        <div class="row">
+            <div class="col-md-3">
+                <RadzenLabel Text="Sintomas"/>
+            </div>
+            <div class="col">
+                <RadzenDropDown AllowFiltering TValue="Sintoma" TextProperty="Descripcion"
+                                Data="@SintomasList" Placeholder="Seleccione sintomas..." Change="@OnSintomasChange"/>
+                <ValidationMessage For="@(() => Cita.Sintomas)"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"/>
+            <div class="col">
+
+                @foreach (var s in Cita?.Sintomas)
+                {
+                    <div class="badge bg-dark me-2 mb-2 px-2">
+                        @s?.Descripcion <RadzenButton Icon="clear" Click="@(() => OnSintomaDelete(s))" class="fs-6 bg-dark"/>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Guardar"/>
+            <RadzenButton Text="Eliminar" Click="Eliminar" ButtonStyle="ButtonStyle.Danger"/>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public DateTime? Start { get; set; } = new DateTime();
+
+    [Parameter]
+    public DateTime? End { get; set; } = new DateTime();
+
+    [Parameter]
+    public Cita? SelectedCita { get; set; } = new Cita();
+
+    [Inject]
+    public IUnitOfWork? UnitOfWork { get; set; }
+
+    Cita? Cita = new Cita();
+
+    IEnumerable<Paciente>? PacientesList { get; set; }
+    IEnumerable<Sintoma>? SintomasList { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PacientesList = UnitOfWork?.Pacientes.Get();
+        SintomasList = UnitOfWork?.Sintomas.Get();
+        if (SelectedCita != null)
+        {
+            Cita = SelectedCita;
+        }
+        else
+        {
+            if (Cita == null) return;
+            Cita.Inicio = Start;
+            Cita.Fin = End;
+            Cita.Sintomas = new List<Sintoma>();
+        }
+    }
+
+    // protected override void OnParametersSet()
+    // {
+    // }
+
+    void OnSubmit()
+    {
+    // Validacion
+        var error = "";
+        if (Cita?.Inicio > Cita?.Fin) error = $"La hora de inicio debe ser menor a la de fin. \nInicio: {Cita.Inicio}\nFin: {Cita.Fin}";
+        if (Cita?.Inicio?.Hour < 9 || Cita?.Fin?.Hour > 18) error = "Las horas laborales son entre las 9:00AM y las 6:00PM";
+        if (!error.IsNullOrEmpty())
+        {
+            NotificationService.Notify(Notifications.Error(error));
+            return;
+        }
+
+        if (Cita == null) return;
+        UnitOfWork?.Citas.Add(Cita, Cita.CitaId);
+        GuardarCambios();
+        DialogService.Close(Cita);
+    }
+
+    void LoadData(LoadDataArgs args)
+    {
+        PacientesList = !string.IsNullOrEmpty(args.Filter) ? UnitOfWork?.Pacientes.Get(p => (p.Nombre + p.Apellido).ToLower().Contains(args.Filter.ToLower())) : UnitOfWork?.Pacientes.Get();
+        InvokeAsync(StateHasChanged);
+    }
+
+    void OnSintomasChange(object value)
+    {
+        Console.WriteLine($"Sintoma seleccionado: {(value as Sintoma).Dump()}");
+        if (!Cita.Sintomas.Contains(value as Sintoma))
+            Cita.Sintomas.Add(value as Sintoma);
+    }
+
+    void OnSintomaDelete(Sintoma? sintoma)
+    {
+        Console.WriteLine($"Sintoma eliminado: {sintoma.Dump()}");
+        Cita.Sintomas.Remove(sintoma);
+    }
+
+    void Eliminar()
+    {
+        if (Cita != null && UnitOfWork?.Citas.GetById(Cita.CitaId) != null)
+        {
+            UnitOfWork?.Citas.Delete(Cita.CitaId);
+            GuardarCambios();
+        }
+        DialogService.Close(Cita);
+    }
+
+    private void GuardarCambios()
+    {
+        NotificationService.Notify(UnitOfWork != null && UnitOfWork.Save() ? Notifications.Success("Operación realizada con éxito!") : Notifications.Error("Ocurrió un error"));
+    }
+
+}

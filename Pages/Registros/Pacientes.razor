@@ -1,0 +1,175 @@
+@page "/registro-pacientes"
+@page "/registro-pacientes/{PacienteId:int?}"
+
+
+<h1>Registro Pacientes</h1>
+<RadzenCard>
+    <EditForm OnValidSubmit="@Guardar" Model="Paciente">
+        <DataAnnotationsValidator/>
+
+        <div class="w-100">
+            <div class="form-group">
+                <label class='form-label d-block'>ID: </label>
+                <RadzenNumeric ShowUpDown="false" TValue="int?" @bind-Value="PacienteId"/>
+                <RadzenButton Icon="search" ButtonStyle="ButtonStyle.Primary" Click="@(args => Buscar(PacienteId))"/>
+            </div>
+            <div class="d-flex w-100">
+                <div class="form-group w-50">
+                    <label class='form-label d-block'>Nombre: </label>
+                    <RadzenTextBox @bind-Value="Paciente.Nombre" class="form-control"/>
+                    <ValidationMessage For="@(() => Paciente.Nombre)"/>
+                </div>
+                <div class="form-group w-50 ms-3">
+                    <label class='form-label d-block'>Apellido: </label>
+                    <RadzenTextBox @bind-Value="Paciente.Apellido" class="form-control"/>
+                    <ValidationMessage For="@(() => Paciente.Apellido)"/>
+                </div>
+
+            </div>
+            <div class="d-flex w-100">
+
+                <div class="form-group w-50">
+                    <label class='form-label d-block'>C&eacute;dula: </label>
+                    <RadzenTextBox @bind-Value="Paciente.Cedula" class="form-control"/>
+                    <ValidationMessage For="@(() => Paciente.Cedula)"/>
+
+
+                </div>
+                <div class="form-group ms-3">
+                    <label class='form-label d-block'>Sexo</label>
+                    <RadzenSelectBar @bind-Value="Paciente.Sexo" TValue="Sexo" class="fs-6">
+                        <Items>
+                            <RadzenSelectBarItem Text="Masculino" Value="Sexo.Masculino"/>
+                            <RadzenSelectBarItem Text="Femenino" Value="Sexo.Femenino"/>
+                            <RadzenSelectBarItem Text="No binario" Value="Sexo.NoBinario"/>
+                        </Items>
+                    </RadzenSelectBar>
+                    <ValidationMessage For="@(() => Paciente.Sexo)"/>
+                </div>
+            </div>
+            <div class="d-flex w-100">
+
+                <div class="form-group w-50">
+                    <label class='form-label d-block'>Direccion: </label>
+                    <RadzenTextBox @bind-Value="Paciente.Direccion" class="form-control"/>
+                    <ValidationMessage For="@(() => Paciente.Direccion)"/>
+                </div>
+
+                <div class="form-group w-50 ms-3">
+                    <label class='form-label d-block'>Telefono: </label>
+                    <RadzenTextBox @bind-Value="Paciente.Telefono" class="form-control"/>
+                    <ValidationMessage For="@(() => Paciente.Telefono)"/>
+                </div>
+            </div>
+
+            <div class="d-flex w-75">
+
+                <div class="form-group w-25">
+                    <label class='form-label d-block'>Edad</label>
+                    <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value="Paciente.Edad" class="form-control"/>
+                    <ValidationMessage For="@(() => Paciente.Edad)"/>
+                </div>
+
+
+                <div class="form-group w-25 ms-5">
+                    <label class='form-label d-block'>Sexo</label>
+                    <RadzenDropDown TValue="EstadoCivil" Class="w-100" @bind-Value="Paciente.EstadoCivil"
+                                    Data="Enum.GetValues(typeof(EstadoCivil)).Cast<EstadoCivil>()"/>
+                    <ValidationMessage For="@(() => Paciente.Sexo)"/>
+                </div>
+
+                <div class="form-group w-25 ms-5">
+                    <label class='form-label d-block'>Nivel Educativo: </label>
+                    <RadzenDropDown TValue="NivelEducativo" Class="w-100" @bind-Value="Paciente.NivelEducativo"
+                                    Data="Enum.GetValues(typeof(NivelEducativo)).Cast<NivelEducativo>()"/>
+                    <ValidationMessage For="@(() => Paciente.NivelEducativo)"/>
+                </div>
+            </div>
+
+            <div class="d-flex w-100">
+
+                <div class="form-group w-50">
+                    <label class='form-label d-block'>Ocupacion: </label>
+                    <RadzenTextBox @bind-Value="Paciente.Ocupacion" class="form-control"/>
+                    <ValidationMessage For="@(() => Paciente.Ocupacion)"/>
+                </div>
+
+                <div class="form-group w-50 ms-3">
+                    <label class='form-label d-block'>Aseguradora: </label>
+                    <RadzenDropDown TValue="Aseguradora" Class="w-100" @bind-Value="Paciente.Aseguradora"
+                                    Data="@(UnitOfWork.Aseguradoras.Get())" TextProperty="Nombre" Placeholder="Seleccione una aseguradora..."/>
+                    <ValidationMessage For="@(() => Paciente.Aseguradora)"/>
+                </div>
+            </div>
+        </div>
+        <div class="">
+
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Guardar" Icon="save" ButtonStyle="ButtonStyle.Success"/>
+            <RadzenButton Click="@(args => Nuevo())" Text="Nuevo" Icon="add_box" ButtonStyle="ButtonStyle.Secondary"/>
+            <RadzenButton Click="@(args => Eliminar())" Text="Eliminar" Icon="delete" ButtonStyle="ButtonStyle.Danger"/>
+
+        </div>
+    </EditForm>
+</RadzenCard>
+
+@code {
+
+    [Parameter]
+    public int? PacienteId { get; set; }
+
+    [Inject]
+    public IUnitOfWork? UnitOfWork { get; set; }
+
+    public Paciente? Paciente { get; set; } = new Paciente();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Buscar(PacienteId);
+    }
+
+    public void Buscar(int? id)
+    {
+        if (id > 0)
+        {
+            var encontrado = UnitOfWork?.Pacientes.GetById(id);
+            if (encontrado is not null)
+            {
+                Paciente = encontrado;
+                NotificationService.Notify(Notifications.Success("Encontrado con ID: " + PacienteId));
+                Console.WriteLine(encontrado.Dump());
+            }
+            else
+            {
+                NotificationService.Notify(Notifications.Error("No se ha encontrado el producto!"));
+                Paciente = new Paciente();
+            }
+        }
+        else
+        {
+            Paciente = new Paciente();
+        }
+    }
+
+    private void Guardar()
+    {
+        if (Paciente != null) UnitOfWork?.Pacientes.Add(Paciente, Paciente.PacienteId);
+        GuardarCambios();
+    }
+
+    private void Nuevo()
+    {
+        Paciente = new Paciente();
+    }
+
+    private void Eliminar()
+    {
+        if (Paciente != null) UnitOfWork?.Aseguradoras.Delete(Paciente.PacienteId);
+    }
+
+    private void GuardarCambios()
+    {
+        NotificationService.Notify(UnitOfWork != null && UnitOfWork.Save() ? Notifications.Success("Operación realizada con éxito!") : Notifications.Error("Ocurrió un error"));
+    }
+
+}
