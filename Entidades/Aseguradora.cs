@@ -3,9 +3,9 @@ using ProyectoFinal.IEntidades;
 
 namespace ProyectoFinal.Entidades;
 
-public class Aseguradora : ICreatedUpdated
+public class Aseguradora : ICreatedUpdated, IIdentifiable
 {
-    [Key] public int AseguradoraId { get; set; }
+    [Key] public int? Id { get; set; }
 
     [Required]
     [MaxLength(40, ErrorMessage = "El tamaño no puede exceder 40 caracteres"),]

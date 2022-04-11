@@ -3,9 +3,9 @@ using ProyectoFinal.IEntidades;
 
 namespace ProyectoFinal.Entidades;
 
-public class Sintoma : ICreatedUpdated
+public class Sintoma : ICreatedUpdated, IIdentifiable
 {
-    [Key] public int SintomasId { get; set; }
+    [Key] public int? Id { get; set; }
 
     [Required] public string Descripcion { get; set; }
 

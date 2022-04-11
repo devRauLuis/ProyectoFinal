@@ -3,9 +3,9 @@ using ProyectoFinal.IEntidades;
 
 namespace ProyectoFinal.Entidades;
 
-public class Cita : ICreatedUpdated
+public class Cita : ICreatedUpdated, IIdentifiable
 {
-    [Key] public int? CitaId { get; set; }
+    [Key] public int? Id { get; set; }
 
     [Required] public DateTime? Inicio { get; set; }
 
@@ -23,5 +23,5 @@ public class Cita : ICreatedUpdated
     public DateTime? CreadoEn { get; set; } = DateTime.Now;
     public DateTime? ActualizadoEn { get; set; } = DateTime.Now;
 
-    public string? NombreCompleto => Paciente?.Nombre + " " + Paciente?.Apellido;
+    // public string? NombreCompleto => Paciente?.Nombre + " " + Paciente?.Apellido;
 }

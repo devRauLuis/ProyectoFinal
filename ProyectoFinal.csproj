@@ -23,17 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Consultas" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Data\app.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Registros\Citas\AddAppointment.razor" />
     <_ContentIncludedByDefault Remove="Pages\Registros\Citas\Citas.razor" />
     <_ContentIncludedByDefault Remove="Pages\Registros\Citas\EditAppointment.razor" />
