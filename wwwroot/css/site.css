@@ -69,5 +69,63 @@ a, .btn-link {
 }
 
 .rz-button-text-only {
-    
+
+}
+
+.link-unstyled, .link-unstyled:link, .link-unstyled:hover {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.secondary-nav-link {
+    font-size: 18px;
+    font-weight: bold;
+    color: #6A6A6A;
+}
+
+.primary-nav-link {
+    background: #3AA2B2;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    border-radius: 60px;
+    padding: .5rem 1rem;
+}
+
+.primary-nav-link:hover:focus {
+    color: white;
+    /*transform: scale(1.1);*/
+    transition: ease-in 100ms;
+}
+
+.hero-section {
+    padding: 50px 80px;
+}
+
+.hero-section > h1 {
+    font-size: 5rem;
+    color: #3AB286;
+}
+
+.log-out-link {
+    color: rgba(200, 50, 0, 1);
+    font-weight: 500;
+}
+
+.hero-section > p {
+    font-size: 1.2rem;
+    color: #5A5A5A;
+    padding-left: 10px;
+}
+
+.hero-action {
+    display: inline-block;
+    margin-top: 1rem;
+    margin-left: .5rem;
+    background: #3AB286;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: .5rem 1.5rem;
+    border-radius: 2rem;
 }
