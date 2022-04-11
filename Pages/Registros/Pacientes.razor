@@ -1,6 +1,5 @@
 @page "/registro-pacientes"
-@page "/registro-pacientes/{PacienteId:int?}"
-
+@page "/registro-pacientes/{Id:int?}"
 
 <h1>Registro Pacientes</h1>
 <RadzenCard>
@@ -10,8 +9,8 @@
         <div class="w-100">
             <div class="form-group">
                 <label class='form-label d-block'>ID: </label>
-                <RadzenNumeric ShowUpDown="false" TValue="int?" @bind-Value="PacienteId"/>
-                <RadzenButton Icon="search" ButtonStyle="ButtonStyle.Primary" Click="@(args => Buscar(PacienteId))"/>
+                <RadzenNumeric ShowUpDown="false" TValue="int?" @bind-Value="Id"/>
+                <RadzenButton Icon="search" ButtonStyle="ButtonStyle.Primary" Click="@(args => Buscar(Id))"/>
             </div>
             <div class="d-flex w-100">
                 <div class="form-group w-50">
@@ -72,10 +71,10 @@
 
 
                 <div class="form-group w-25 ms-5">
-                    <label class='form-label d-block'>Sexo</label>
+                    <label class='form-label d-block'>Estado Civil</label>
                     <RadzenDropDown TValue="EstadoCivil" Class="w-100" @bind-Value="Paciente.EstadoCivil"
                                     Data="Enum.GetValues(typeof(EstadoCivil)).Cast<EstadoCivil>()"/>
-                    <ValidationMessage For="@(() => Paciente.Sexo)"/>
+                    <ValidationMessage For="@(() => Paciente.EstadoCivil)"/>
                 </div>
 
                 <div class="form-group w-25 ms-5">
@@ -115,7 +114,7 @@
 @code {
 
     [Parameter]
-    public int? PacienteId { get; set; }
+    public int? Id { get; set; }
 
     [Inject]
     public IUnitOfWork? UnitOfWork { get; set; }
@@ -125,7 +124,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Buscar(PacienteId);
+        Buscar(Id);
     }
 
     public void Buscar(int? id)
@@ -136,7 +135,7 @@
             if (encontrado is not null)
             {
                 Paciente = encontrado;
-                NotificationService.Notify(Notifications.Success("Encontrado con ID: " + PacienteId));
+                NotificationService.Notify(Notifications.Success("Encontrado con ID: " + Id));
                 Console.WriteLine(encontrado.Dump());
             }
             else
@@ -153,7 +152,7 @@
 
     private void Guardar()
     {
-        if (Paciente != null) UnitOfWork?.Pacientes.Add(Paciente, Paciente.PacienteId);
+        if (Paciente != null) UnitOfWork?.Pacientes.Add(Paciente, Paciente.Id);
         GuardarCambios();
     }
 
@@ -164,7 +163,7 @@
 
     private void Eliminar()
     {
-        if (Paciente != null) UnitOfWork?.Aseguradoras.Delete(Paciente.PacienteId);
+        if (Paciente != null) UnitOfWork?.Aseguradoras.Delete(Paciente.Id);
     }
 
     private void GuardarCambios()

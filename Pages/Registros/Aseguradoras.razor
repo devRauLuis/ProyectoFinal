@@ -1,5 +1,5 @@
 @page "/registro-aseguradoras"
-@page "/registro-aseguradoras/{AseguradoraId:int?}"
+@page "/registro-aseguradoras/{Id:int?}"
 
 <h1>Registro Aseguradoras</h1>
 
@@ -9,8 +9,8 @@
         <div class="w-100">
             <div class="form-group">
                 <label class='form-label d-block'>ID: </label>
-                <RadzenNumeric ShowUpDown="false" TValue="int?" @bind-Value="AseguradoraId"/>
-                <RadzenButton Icon="search" ButtonStyle="ButtonStyle.Primary" Click="@(args => Buscar(AseguradoraId))"/>
+                <RadzenNumeric ShowUpDown="false" TValue="int?" @bind-Value="Id"/>
+                <RadzenButton Icon="search" ButtonStyle="ButtonStyle.Primary" Click="@(args => Buscar(Id))"/>
             </div>
             <div class="form-group w-50">
                 <label class='form-label d-block'>Nombre: </label>
@@ -44,7 +44,7 @@
     private Aseguradora? Aseguradora { get; set; }
 
     [Parameter]
-    public int? AseguradoraId { get; set; }
+    public int? Id { get; set; }
 
     [Inject]
     public IUnitOfWork? UnitOfWork { get; set; }
@@ -53,7 +53,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Buscar(AseguradoraId);
+        Buscar(Id);
     }
 
     public void Buscar(int? id)
@@ -80,7 +80,7 @@
 
     private void Guardar()
     {
-        if (Aseguradora != null) UnitOfWork?.Aseguradoras.Add(Aseguradora, Aseguradora.AseguradoraId);
+        if (Aseguradora != null) UnitOfWork?.Aseguradoras.Add(Aseguradora, Aseguradora.Id);
         GuardarCambios();
     }
 
@@ -91,7 +91,7 @@
 
     private void Eliminar()
     {
-        if (Aseguradora != null) UnitOfWork?.Aseguradoras.Delete(Aseguradora.AseguradoraId);
+        if (Aseguradora != null) UnitOfWork?.Aseguradoras.Delete(Aseguradora.Id);
     }
 
     private void GuardarCambios()
