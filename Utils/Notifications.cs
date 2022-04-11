@@ -22,4 +22,10 @@ public class Notifications
         return new NotificationMessage()
             {Severity = NotificationSeverity.Error, Summary = "Error", Detail = message, Duration = 4000};
     }
+    
+    public static NotificationMessage Warning(string message)
+    {
+        return new NotificationMessage()
+            {Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = message, Duration = 4000};
+    }
 }
