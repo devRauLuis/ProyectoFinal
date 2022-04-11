@@ -28,7 +28,9 @@
     <_ContentIncludedByDefault Remove="Pages\Registros\Citas\EditAppointment.razor" />
   </ItemGroup>
 
-  <Target Name="PrePublishTarget" AfterTargets="Publish">
-    <Exec Command="dotnet ef database update" />
-  </Target>
+
 </Project>
+
+<Target Name="PrePublishTarget" AfterTargets="Publish">
+  <Exec Command="dotnet ef database update" />
+</Target>
