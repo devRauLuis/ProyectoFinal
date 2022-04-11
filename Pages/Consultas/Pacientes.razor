@@ -1,0 +1,83 @@
+@page "/consulta-pacientes"
+
+<div class="row align-items-center">
+    <div class="col-2">
+        <h1 >Pacientes</h1>
+    </div>
+    <div class="col-2">
+        <RadzenButton Text="Nuevo" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Secondary" Click="@(args => navManager.NavigateTo("/registro-pacientes/"))"/>
+    </div>
+</div>
+
+<div class="row align-items-end mt-4">
+    <div class="col-3">
+        <RadzenLabel Text="Desde"/>
+        <RadzenDatePicker TValue="DateTime?" @bind-Value="@Desde" AllowClear ShowTime DateFormat="dd/MM/yy hh:mm tt"/>
+    </div>
+    <div class="col-3">
+        <RadzenLabel Text="Hasta"/>
+        <RadzenDatePicker TValue="DateTime?" @bind-Value="@Hasta" AllowClear ShowTime DateFormat="dd/MM/yy hh:mm tt"/>
+    </div>
+    <RadzenButton Text="Filtrar" class="col-1" Click="@Filtrar"/>
+</div>
+<div class="w-100 mt-4">
+    <RadzenDataGrid AllowFiltering AllowColumnResize AllowPaging AllowSorting AllowVirtualization
+                    FilterMode="FilterMode.Simple" PageSize="5" Data="@PacientesList" T Item="Paciente"
+                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    LogicalFilterOperator="LogicalFilterOperator.And" ColumnWidth="150px">
+        <Columns>
+            <RadzenDataGridColumn TItem="Paciente" Sortable="false" Filterable="false" TextAlign="TextAlign.Center" Frozen Width="60px">
+                <Template Context="data">
+                    <RadzenButton Click=@(args => navManager.NavigateTo("/registro-pacientes/" + data.Id)) Icon="visibility" ButtonStyle="ButtonStyle.Primary"/>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Paciente" Property="Id" Title="ID" Frozen Width="100px" TextAlign="TextAlign.Center">
+                <FooterTemplate>
+                    <strong>@PacientesList.Count() entradas</strong>
+                </FooterTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Paciente" Property="Nombre" Title="Nombre" Frozen />
+            <RadzenDataGridColumn TItem="Paciente" Property="Apellido" Title="Apellido" Frozen />
+            <RadzenDataGridColumn TItem="Paciente" Property="Cedula" Title="Cédula"/>
+            <RadzenDataGridColumn TItem="Paciente" Property="Telefono" Title="Telefono" Filterable="false"/>
+            <RadzenDataGridColumn TItem="Paciente" Property="Aseguradora.Nombre" Title="Aseguradora"/>
+            <RadzenDataGridColumn TItem="Paciente" Property="Edad" Title="Edad" Filterable="false"/>
+            <RadzenDataGridColumn TItem="Paciente" Property="Sexo" Title="Sexo" Filterable="false"/>
+            <RadzenDataGridColumn TItem="Paciente" Property="EstadoCivil" Title="Estado Civil" Filterable="false"/>
+            <RadzenDataGridColumn TItem="Paciente" Property="Direccion" Title="Direccion" Filterable="false"/>
+            <RadzenDataGridColumn TItem="Paciente" Property="Ocupacion" Title="Ocupacion" Sortable="false"/>
+            <RadzenDataGridColumn TItem="Paciente" Property="CreadoEn" Title="Creado en" Sortable="false" Filterable="false" FormatString="{0: dd/MM/yyyy, hh:mm:ss tt}"/>
+
+        </Columns>
+    </RadzenDataGrid>
+</div>
+
+@code {
+
+    [Inject]
+    IUnitOfWork? UnitOfWork { get; set; }
+
+    public IEnumerable<Paciente>? PacientesList { get; set; } = new List<Paciente>();
+
+    public DateTime? Desde { get; set; }
+
+    public DateTime? Hasta { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PacientesList = UnitOfWork?.Pacientes.Get(null, null, "Aseguradora");
+    }
+
+    void Filtrar()
+    {
+        if (Desde > Hasta)
+        {
+            NotificationService.Notify(Notifications.Error("Desde puede ser mayor que Hasta"));
+        }
+        Desde ??= DateTime.UnixEpoch;
+        Hasta ??= DateTime.Now;
+        PacientesList = UnitOfWork.Pacientes.Get(p => p.CreadoEn >= Desde && p.CreadoEn <= Hasta);
+    }
+
+}
