@@ -336,9 +336,6 @@ namespace ProyectoFinal.Migrations
 
                     b.HasIndex("AseguradoraId");
 
-                    b.HasIndex("Cedula")
-                        .IsUnique();
-
                     b.ToTable("Pacientes");
                 });
 
@@ -371,36 +368,36 @@ namespace ProyectoFinal.Migrations
                         new
                         {
                             Id = 1,
-                            ActualizadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5610),
-                            CreadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5560),
+                            ActualizadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(5960),
+                            CreadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(5920),
                             Descripcion = "Dolor de cabeza"
                         },
                         new
                         {
                             Id = 2,
-                            ActualizadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5650),
-                            CreadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5650),
+                            ActualizadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6000),
+                            CreadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(5990),
                             Descripcion = "Tos"
                         },
                         new
                         {
                             Id = 3,
-                            ActualizadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5680),
-                            CreadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5670),
+                            ActualizadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6020),
+                            CreadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6010),
                             Descripcion = "Vómitos"
                         },
                         new
                         {
                             Id = 4,
-                            ActualizadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5690),
-                            CreadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5690),
+                            ActualizadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6040),
+                            CreadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6030),
                             Descripcion = "Dolor de muelas"
                         },
                         new
                         {
                             Id = 5,
-                            ActualizadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5710),
-                            CreadoEn = new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5710),
+                            ActualizadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6060),
+                            CreadoEn = new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6050),
                             Descripcion = "Caries"
                         });
                 });

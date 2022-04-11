@@ -250,27 +250,27 @@ namespace ProyectoFinal.Migrations
             migrationBuilder.InsertData(
                 table: "Sintomas",
                 columns: new[] { "Id", "ActualizadoEn", "CitaId", "CreadoEn", "Descripcion" },
-                values: new object[] { 1, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5610), null, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5560), "Dolor de cabeza" });
+                values: new object[] { 1, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(5960), null, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(5920), "Dolor de cabeza" });
 
             migrationBuilder.InsertData(
                 table: "Sintomas",
                 columns: new[] { "Id", "ActualizadoEn", "CitaId", "CreadoEn", "Descripcion" },
-                values: new object[] { 2, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5650), null, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5650), "Tos" });
+                values: new object[] { 2, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6000), null, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(5990), "Tos" });
 
             migrationBuilder.InsertData(
                 table: "Sintomas",
                 columns: new[] { "Id", "ActualizadoEn", "CitaId", "CreadoEn", "Descripcion" },
-                values: new object[] { 3, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5680), null, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5670), "Vómitos" });
+                values: new object[] { 3, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6020), null, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6010), "Vómitos" });
 
             migrationBuilder.InsertData(
                 table: "Sintomas",
                 columns: new[] { "Id", "ActualizadoEn", "CitaId", "CreadoEn", "Descripcion" },
-                values: new object[] { 4, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5690), null, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5690), "Dolor de muelas" });
+                values: new object[] { 4, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6040), null, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6030), "Dolor de muelas" });
 
             migrationBuilder.InsertData(
                 table: "Sintomas",
                 columns: new[] { "Id", "ActualizadoEn", "CitaId", "CreadoEn", "Descripcion" },
-                values: new object[] { 5, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5710), null, new DateTime(2022, 4, 10, 18, 22, 59, 434, DateTimeKind.Local).AddTicks(5710), "Caries" });
+                values: new object[] { 5, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6060), null, new DateTime(2022, 4, 11, 16, 56, 56, 510, DateTimeKind.Local).AddTicks(6050), "Caries" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -318,12 +318,6 @@ namespace ProyectoFinal.Migrations
                 name: "IX_Pacientes_AseguradoraId",
                 table: "Pacientes",
                 column: "AseguradoraId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pacientes_Cedula",
-                table: "Pacientes",
-                column: "Cedula",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sintomas_CitaId",
