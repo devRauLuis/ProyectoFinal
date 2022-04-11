@@ -1,18 +1,54 @@
 @page "/citas"
 @page "/citas/{CitaId:int?}"
+@inject TooltipService tooltipService
 
-<h1>Citas</h1>
+<div>
+    <h1>Citas</h1><RadzenIcon Icon="help_outline" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions() {Duration = 10000, Text = "Seleccione un espacio vacío en el calendario para apartar una cita"}))"/>
+</div>
+<div>
+    <div class="row align-items-center mb-3">
+        <div class="col-1">
+            <RadzenLabel Text="Filtro"/>
+        </div>
+        <div class="col-2">
+            <RadzenSelectBar @bind-Value="Filtro" TValue="CitaFiltro">
+                <Items>
+                    <RadzenSelectBarItem Text="Nombre" Value="CitaFiltro.NombreCompleto" Style="font-size: 12px;padding:0 12px;"/>
+                    <RadzenSelectBarItem Text="ID" Value="CitaFiltro.ID" Style="font-size: 12px;padding:0 12px;"/>
+                </Items>
+            </RadzenSelectBar>
+        </div>
+        <div class="col">
 
-
-<RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="Cita" Data="@(UnitOfWork?.Citas.Get())" StartProperty="Inicio" EndProperty="Fin"
-                 TextProperty="Motivo" SelectedIndex="1"
-                 SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender>
-    <RadzenDayView/>
-    <RadzenWeekView/>
-    <RadzenMonthView/>
-</RadzenScheduler>
-
-@* <EventConsole @ref=@console Class="mt-4" /> *@
+            <RadzenDropDown AllowFiltering AllowClear TValue="Cita" @bind-Value="SelectedCita" LoadData="@(args => LoadFilterData(args.Filter))"
+                            Data="@CitasList" Placeholder="Busque una cita..." class="w-100 h-25" Change="OnCitaDropdownChange">
+                <Template>
+                    <div class="py-2">
+                        <p style="margin:0;padding: 0;">
+                            @((context as Cita)?.Paciente?.NombreCompleto)
+                        </p>
+                        <hr class="p-0 my-1"/>
+                        <div style="font-size: 12px;height: 12px;" class="d-flex justify-content-between">
+                            <p>
+                                @((context as Cita)?.Motivo)
+                            </p>
+                            <p class="p-0 m-0">
+                                @((context as Cita)?.Inicio.ToString() + " - " + (context as Cita)?.Fin.ToString())
+                            </p>
+                        </div>
+                    </div>
+                </Template>
+            </RadzenDropDown>
+        </div>
+    </div>
+    <RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="Cita" Data="@(UnitOfWork?.Citas.Get())" StartProperty="Inicio" EndProperty="Fin"
+                     TextProperty="Motivo" SelectedIndex="1"
+                     SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect TodayText="Hoy">
+        <RadzenDayView Text="Dia"/>
+        <RadzenWeekView Text="Semana"/>
+        <RadzenMonthView Text="Mes"/>
+    </RadzenScheduler>
+</div>
 
 @code {
     RadzenScheduler<Cita> scheduler;
@@ -23,19 +59,43 @@
     [Inject]
     public IUnitOfWork? UnitOfWork { get; set; }
 
-    // EventConsole console;
-    // Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
-    //
-    // IList<Appointment> appointments = new List<Appointment>
-    // {
-    //     new Appointment { Start = DateTime.Today.AddDays(-2), End = DateTime.Today.AddDays(-2), Text = "Birthday" },
-    //     new Appointment { Start = DateTime.Today.AddDays(-11), End = DateTime.Today.AddDays(-10), Text = "Day off" },
-    //     new Appointment { Start = DateTime.Today.AddDays(-10), End = DateTime.Today.AddDays(-8), Text = "Work from home" },
-    //     new Appointment { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(12), Text = "Online meeting" },
-    //     new Appointment { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(13), Text = "Skype call" },
-    //     new Appointment { Start = DateTime.Today.AddHours(14), End = DateTime.Today.AddHours(14).AddMinutes(30), Text = "Dentist appointment" },
-    //     new Appointment { Start = DateTime.Today.AddDays(1), End = DateTime.Today.AddDays(12), Text = "Vacation" },
-    // };
+    CitaFiltro Filtro { get; set; }
+    IEnumerable<Cita>? CitasList { get; set; }
+
+    Cita? SelectedCita { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (CitaId != null)
+        {
+            LoadCitaById(CitaId);
+        }
+    }
+
+    void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "Some content", options);
+
+    async void LoadCitaById(int? id)
+    {
+        try
+        {
+            var cita = UnitOfWork?.Citas.GetById(id);
+            if (cita != null)
+            {
+                await DialogService.OpenAsync<CitaDialog>("Editar cita", new Dictionary<string, object> {{"SelectedCita", cita}});
+                await scheduler.Reload();
+            }
+            else
+            {
+                NotificationService.Notify(Notifications.Error("Cita no encontrada!"));
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 
     void OnSlotRender(SchedulerSlotRenderEventArgs args)
     {
@@ -56,10 +116,11 @@
     {
         Console.WriteLine($"SlotSelect: Start={args.Start} End={args.End}");
 
-        await DialogService.OpenAsync<CitaDialog>("Agregar Cita",
+        await DialogService.OpenAsync<CitaDialog>("Agregar cita",
             new Dictionary<string, object> {{"Start", args.Start}, {"End", args.End}});
 
         await scheduler.Reload();
+        LoadFilterData();
     }
 
     async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<Cita> args)
@@ -67,9 +128,9 @@
         Console.WriteLine($"AppointmentSelect: Appointment={args.Data.Motivo}");
         try
         {
-            await DialogService.OpenAsync<CitaDialog>("Edit Appointment", new Dictionary<string, object> {{"SelectedCita", args.Data}});
-
+            await DialogService.OpenAsync<CitaDialog>("Editar cita", new Dictionary<string, object> {{"SelectedCita", args.Data}});
             await scheduler.Reload();
+            LoadFilterData();
         }
         catch (Exception e)
         {
@@ -78,14 +139,37 @@
         }
     }
 
-    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Cita> args)
+
+    void LoadFilterData(string filtro = "")
     {
-    // // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
-    //
-    // if (args.Data.Text == "Birthday")
-    // {
-    //     args.Attributes["style"] = "background: red";
-    // }
+        IEnumerable<Cita>? list = new List<Cita>();
+        var includedProperties = "Paciente";
+
+        switch (Filtro)
+        {
+            case CitaFiltro.ID:
+                int parsedFiltro = int.TryParse(filtro, out parsedFiltro) ? parsedFiltro : 0;
+                list = UnitOfWork?.Citas.Get(c => c.Id == parsedFiltro);
+                break;
+            case CitaFiltro.NombreCompleto:
+                var filtroText = filtro.ToLower().Trim().Replace(" ", "");
+
+                list = UnitOfWork?.Citas.Get(c => (c.Paciente.Nombre + " " + c.Paciente.Apellido).ToLower().Trim().Replace(" ", "").Contains(filtroText), null, includedProperties);
+                break;
+            default:
+                list = UnitOfWork?.Citas.Get(null, null, includedProperties);
+                break;
+        }
+
+        if (list != null) CitasList = list.OrderBy(c => c.Inicio);
+
+        InvokeAsync(StateHasChanged);
+    }
+
+    void OnCitaDropdownChange()
+    {
+        if (SelectedCita != null)
+            LoadCitaById(SelectedCita.Id);
     }
 
 }
