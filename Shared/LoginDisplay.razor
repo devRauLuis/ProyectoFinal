@@ -1,12 +1,16 @@
-﻿<AuthorizeView>
+﻿@inject NavigationManager navManager
+
+<AuthorizeView>
     <Authorized>
-        <a href="Identity/Account/Manage">Hello, @context.User.Identity?.Name!</a>
-        <form method="post" action="Identity/Account/LogOut">
-            <button type="submit" class="nav-link btn btn-link">Log out</button>
+        <form method="post" action="Identity/Account/LogOut" class="d-flex align-items-center">
+            <a href="Identity/Account/Manage" class="secondary-nav-link">Hola, @context.User.Identity?.Name!</a>
+            <button type="submit" class="nav-link btn btn-link log-out-link ">Cerrar sesi&oacute;n</button>
         </form>
     </Authorized>
     <NotAuthorized>
-        <a href="Identity/Account/Register">Register</a>
-        <a href="Identity/Account/Login">Log in</a>
+        <form class="d-flex align-items-center">
+            <a href="Identity/Account/Register" class="link-unstyled secondary-nav-link">Registrarse</a>
+            <a href="Identity/Account/Login" class="link-unstyled primary-nav-link ms-3">Iniciar sesi&oacute;n</a>
+        </form>
     </NotAuthorized>
 </AuthorizeView>
