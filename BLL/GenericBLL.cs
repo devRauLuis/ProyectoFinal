@@ -4,15 +4,15 @@ using ProyectoFinal.DAL;
 using ProyectoFinal.Entidades;
 using ProyectoFinal.IEntidades;
 
-namespace ProyectoFinal.Repositories;
+namespace ProyectoFinal.BLL;
 
-public class GenericRepository<TEntity> where TEntity : class, ICreatedUpdated
+public class GenericBLL<TEntity> where TEntity : class, ICreatedUpdated, IIdentifiable
 {
-    internal ApplicationDbContext context;
-    internal DbSet<TEntity> dbSet;
-    public readonly ILogger _logger;
+    private ApplicationDbContext context;
+    private DbSet<TEntity> dbSet;
+    private readonly ILogger _logger;
 
-    public GenericRepository(ApplicationDbContext context, ILogger logger)
+    protected GenericBLL(ApplicationDbContext context, ILogger logger)
     {
         this.context = context;
         this.dbSet = context.Set<TEntity>();
@@ -40,14 +40,27 @@ public class GenericRepository<TEntity> where TEntity : class, ICreatedUpdated
         return orderBy != null ? orderBy(query).ToList() : query.ToList();
     }
 
-    public virtual TEntity? GetById(object? id)
+    public virtual TEntity? GetById(int? id)
     {
-        return dbSet.Find(id);
+        // IQueryable<TEntity> query = dbSet;
+        // foreach (var includeProperty in includeProperties.Split
+        //              (new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+        // {
+        //     query = query.Include(includeProperty);
+        // }
+        //
+        // // return dbSet.Find(id);
+        // return query.AsNoTracking().FirstOrDefault(x => x.Id == id);
+        var found = dbSet.Find(id);
+        context.Entry(found).State = EntityState.Detached;
+        return found;
     }
 
     public virtual void Add(TEntity entity, int? id)
     {
-        var exists = GetById(id) != null;
+        // var found = dbSet.Find(id);
+        // bool exists = found != = null;
+        var exists = id != null && GetById(id) != null;
         if (exists)
         {
             entity.ActualizadoEn = DateTime.Now;
@@ -88,53 +101,3 @@ public class GenericRepository<TEntity> where TEntity : class, ICreatedUpdated
         dbSet.Remove(entityToDelete);
     }
 }
-
-
-// public class GenericRepository<T> : IGenericRepository<T> where T : class
-// {
-//   
-//     
-//     protected ApplicationDbContext context;
-//     internal DbSet<T> dbSet;
-//     public readonly ILogger _logger;
-//
-//     public GenericRepository(
-//         ApplicationDbContext context,
-//         ILogger logger)
-//     {
-//         this.context = context;
-//         this.dbSet = context.Set<T>();
-//         _logger = logger;
-//     }
-//
-//     public virtual async Task<T> GetById(Guid id)
-//     {
-//         return await dbSet.FindAsync(id);
-//     }
-//
-//     public virtual async Task<bool> Add(T entity)
-//     {
-//         await dbSet.AddAsync(entity);
-//         return true;
-//     }
-//
-//     public virtual Task<bool> Delete(int id)
-//     {
-//         throw new NotImplementedException();
-//     }
-//
-//     public virtual Task<IEnumerable<T>> All()
-//     {
-//         throw new NotImplementedException();
-//     }
-//
-//     public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
-//     {
-//         return await dbSet.Where(predicate).ToListAsync();
-//     }
-//
-//     public virtual Task<bool> Upsert(T entity)
-//     {
-//         throw new NotImplementedException();
-//     }
-// }

@@ -1,18 +1,17 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using ProyectoFinal.Data;
 using ProyectoFinal.Entidades;
 using ProyectoFinal.IEntidades;
 
-namespace ProyectoFinal.IRepositories;
+namespace ProyectoFinal.IBLL;
 
-public interface IGenericRepository<TEntity> where TEntity : class, ICreatedUpdated
+public interface IGenericBLL<TEntity> where TEntity : class, ICreatedUpdated
 {
     IEnumerable<TEntity> Get(
         Expression<Func<TEntity, bool>>? filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         string includeProperties = "");
-    TEntity GetById(object id);
+    TEntity GetById(int? id);
 
     void Add(TEntity entity, int? id);
     void Insert(TEntity entity);

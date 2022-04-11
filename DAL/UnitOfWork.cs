@@ -1,6 +1,6 @@
 using ProyectoFinal.Entidades;
 using ProyectoFinal.IConfiguration;
-using ProyectoFinal.Repositories;
+using ProyectoFinal.BLL;
 
 namespace ProyectoFinal.DAL;
 
@@ -8,19 +8,19 @@ public class UnitOfWork : IUnitOfWork
 {
     public ApplicationDbContext _context;
     public ILogger _logger;
-    public GenericRepository<Paciente> Pacientes { get; }
-    public AseguradoraRepository Aseguradoras { get; }
-    public GenericRepository<Cita> Citas { get; }
-    public GenericRepository<Sintoma> Sintomas { get; }
+    public GenericBLL<Paciente> Pacientes { get; }
+    public AseguradoraBLL Aseguradoras { get; }
+    public GenericBLL<Cita> Citas { get; }
+    public GenericBLL<Sintoma> Sintomas { get; }
 
     public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory)
     {
         _context = context;
         _logger = loggerFactory.CreateLogger("logs");
-        Pacientes = new PacienteRepository(context, _logger);
-        Aseguradoras = new AseguradoraRepository(context, _logger);
-        Citas = new CitaRepository(context, _logger);
-        Sintomas = new SintomaRepository(context, _logger);
+        Pacientes = new PacienteBLL(context, _logger);
+        Aseguradoras = new AseguradoraBLL(context, _logger);
+        Citas = new CitaBLL(context, _logger);
+        Sintomas = new SintomaBLL(context, _logger);
     }
 
 

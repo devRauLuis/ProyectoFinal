@@ -22,34 +22,40 @@ public class ApplicationDbContext : IdentityDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Paciente>().Navigation(p => p.Aseguradora).AutoInclude();
         modelBuilder.Entity<Sintoma>().HasData(new Sintoma()
         {
-            SintomasId = 1,
+            Id = 1,
             Descripcion = "Dolor de cabeza"
         });
 
         modelBuilder.Entity<Sintoma>().HasData(new Sintoma()
         {
-            SintomasId = 2,
+            Id = 2,
             Descripcion = "Tos"
         });
 
         modelBuilder.Entity<Sintoma>().HasData(new Sintoma()
         {
-            SintomasId = 3,
+            Id = 3,
             Descripcion = "Vómitos"
         });
 
         modelBuilder.Entity<Sintoma>().HasData(new Sintoma()
         {
-            SintomasId = 4,
+            Id = 4,
             Descripcion = "Dolor de muelas"
         });
 
         modelBuilder.Entity<Sintoma>().HasData(new Sintoma()
         {
-            SintomasId = 5,
+            Id = 5,
             Descripcion = "Caries"
         });
+
+        // 3,ARS Humano,8090000000,contacto@humano.com,2022-04-10 16:12:27.339957,2022-04-10 16:12:27.339816
+        // 4,ARS Futuro,8090000000,contacto@futuroars.com,2022-04-10 16:13:39.387344,2022-04-10 16:12:59.953459
+        // 5,ARS Monumental,8090000000,contacto@arsmonumental.com,2022-04-10 16:14:15.911803,2022-04-10 16:14:13.361284
     }
 }
