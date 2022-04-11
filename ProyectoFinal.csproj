@@ -1,36 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-ProyectoFinal-96AF3C77-34B1-49A7-858F-0929AF1DE293</UserSecretsId>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>aspnet-ProyectoFinal-96AF3C77-34B1-49A7-858F-0929AF1DE293</UserSecretsId>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.3" />
-    <PackageReference Include="Radzen.Blazor" Version="3.17.3" />
-    <PackageReference Include="ServiceStack.Text" Version="6.0.2" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.3"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.3"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.3"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.3"/>
+        <PackageReference Include="Radzen.Blazor" Version="3.17.3"/>
+        <PackageReference Include="ServiceStack.Text" Version="6.0.2"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\Registros\Citas\AddAppointment.razor" />
-    <_ContentIncludedByDefault Remove="Pages\Registros\Citas\Citas.razor" />
-    <_ContentIncludedByDefault Remove="Pages\Registros\Citas\EditAppointment.razor" />
-  </ItemGroup>
+    <ItemGroup>
+        <_ContentIncludedByDefault Remove="Pages\Registros\Citas\AddAppointment.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Registros\Citas\Citas.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Registros\Citas\EditAppointment.razor"/>
+    </ItemGroup>
 
+    <Target Name="PrePublishTarget" AfterTargets="Publish">
+        <Exec Command="dotnet ef database update"/>
+    </Target>
 
 </Project>
-
-<Target Name="PrePublishTarget" AfterTargets="Publish">
-  <Exec Command="dotnet ef database update" />
-</Target>
