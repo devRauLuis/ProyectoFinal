@@ -2,22 +2,42 @@
 
 <PageTitle>Dra. Patricia Camilo</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
+<div style="height:100vh">
+    <nav class="navbar nav bg-transparent px-4 py-3">
+        <a class="navbar-brand" href="/">
+            <img src="logo.svg" class="logo" alt="Dra Patricia Camilo"/>
+        </a>
+        <LoginDisplay/>
+    </nav>
+
+
+    <div class="page">
+        <AuthorizeView>
+            <Authorized>
+                <div class="sidebar">
+                    <NavMenu/>
+                </div>
+
+                <main>
+                    <article class="content px-4">
+                        @Body
+                    </article>
+                </main>
+            </Authorized>
+            <NotAuthorized>
+                <main class="w-100">
+                    <div class="hero-section">
+                        <h1>Conf&iacute;anos tu sonrisa!</h1>
+                        <p>
+                            Inicia sesi&oacute;n para poder acceder a todos los servicios.
+                        </p>
+                        <a href="Identity/Account/Login" class="link-unstyled hero-action">Iniciar sesi&oacute;n</a>
+                    </div>
+                </main>
+            </NotAuthorized>
+        </AuthorizeView>
     </div>
-
-    <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay/>
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+    <RadzenNotification/>
+    <RadzenDialog/>
+    <RadzenTooltip/>
 </div>
-<RadzenNotification/>
-<RadzenDialog/>
-<RadzenTooltip/>
