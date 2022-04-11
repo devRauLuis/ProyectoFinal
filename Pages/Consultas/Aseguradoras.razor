@@ -1,5 +1,6 @@
 @page "/consulta-aseguradoras"
 
+
 <div class="row align-items-center">
     <div class="col-3">
         <h1>Aseguradoras</h1>
@@ -9,41 +10,43 @@
     </div>
 </div>
 
-<div class="row align-items-end mt-4">
-    <div class="col-3">
-        <RadzenLabel Text="Desde"/>
-        <RadzenDatePicker TValue="DateTime?" @bind-Value="@Desde" AllowClear ShowTime DateFormat="dd/MM/yy hh:mm tt"/>
+<RadzenCard class="mt-4">
+    <div class="row align-items-end mt-4">
+        <div class="col-3">
+            <RadzenLabel Text="Desde"/>
+            <RadzenDatePicker TValue="DateTime?" @bind-Value="@Desde" AllowClear ShowTime DateFormat="dd/MM/yy hh:mm tt"/>
+        </div>
+        <div class="col-3">
+            <RadzenLabel Text="Hasta"/>
+            <RadzenDatePicker TValue="DateTime?" @bind-Value="@Hasta" AllowClear ShowTime DateFormat="dd/MM/yy hh:mm tt"/>
+        </div>
+        <RadzenButton Text="Filtrar" class="col-1" Click="@Filtrar"/>
     </div>
-    <div class="col-3">
-        <RadzenLabel Text="Hasta"/>
-        <RadzenDatePicker TValue="DateTime?" @bind-Value="@Hasta" AllowClear ShowTime DateFormat="dd/MM/yy hh:mm tt"/>
-    </div>
-    <RadzenButton Text="Filtrar" class="col-1" Click="@Filtrar"/>
-</div>
-<div class="w-100 mt-4">
-    <RadzenDataGrid AllowFiltering AllowColumnResize AllowPaging AllowSorting AllowVirtualization
-                    FilterMode="FilterMode.Simple" PageSize="5" Data="@AseguradorasList" T Item="Aseguradora"
-                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                    LogicalFilterOperator="LogicalFilterOperator.And" ColumnWidth="200px">
-        <Columns>
-            <RadzenDataGridColumn TItem="Aseguradora" Sortable="false" Filterable="false" TextAlign="TextAlign.Center" Frozen Width="50px">
-                <Template Context="data">
-                    <RadzenButton Click=@(args => navManager.NavigateTo("/registro-aseguradoras/" + data.Id)) Icon="visibility" ButtonStyle="ButtonStyle.Primary"/>
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="Aseguradora" Property="Id" Title="ID" Frozen Width="100px" TextAlign="TextAlign.Center">
-                <FooterTemplate>
-                    <strong>@AseguradorasList.Count() entradas</strong>
-                </FooterTemplate>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="Aseguradora" Property="Nombre" Title="Nombre" Frozen Width="180px"/>
-            <RadzenDataGridColumn TItem="Aseguradora" Property="Correo" Title="Correo"/>
-            <RadzenDataGridColumn TItem="Aseguradora" Property="Telefono" Title="Telefono" Filterable="false"/>
-            <RadzenDataGridColumn TItem="Aseguradora" Property="CreadoEn" Title="Creado en" Sortable="false" Filterable="false" FormatString="{0: dd/mm/yyyy, hh:mm:ss tt}"/>
+    <div class="w-100 mt-4">
+        <RadzenDataGrid AllowFiltering AllowColumnResize AllowPaging AllowSorting AllowVirtualization
+                        FilterMode="FilterMode.Simple" PageSize="5" Data="@AseguradorasList" T Item="Aseguradora"
+                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                        LogicalFilterOperator="LogicalFilterOperator.And" ColumnWidth="200px">
+            <Columns>
+                <RadzenDataGridColumn TItem="Aseguradora" Sortable="false" Filterable="false" TextAlign="TextAlign.Center" Frozen Width="50px">
+                    <Template Context="data">
+                        <RadzenButton Click=@(args => navManager.NavigateTo("/registro-aseguradoras/" + data.Id)) Icon="visibility" ButtonStyle="ButtonStyle.Primary"/>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Aseguradora" Property="Id" Title="ID" Frozen Width="100px" TextAlign="TextAlign.Center">
+                    <FooterTemplate>
+                        <strong>@AseguradorasList.Count() entradas</strong>
+                    </FooterTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Aseguradora" Property="Nombre" Title="Nombre" Frozen Width="180px"/>
+                <RadzenDataGridColumn TItem="Aseguradora" Property="Correo" Title="Correo"/>
+                <RadzenDataGridColumn TItem="Aseguradora" Property="Telefono" Title="Telefono" Filterable="false"/>
+                <RadzenDataGridColumn TItem="Aseguradora" Property="CreadoEn" Title="Creado en" Sortable="false" Filterable="false" FormatString="{0: dd/mm/yyyy, hh:mm:ss tt}"/>
 
-        </Columns>
-    </RadzenDataGrid>
-</div>
+            </Columns>
+        </RadzenDataGrid>
+    </div>
+</RadzenCard>
 
 @code {
 

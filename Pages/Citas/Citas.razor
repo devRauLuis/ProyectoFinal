@@ -2,10 +2,11 @@
 @page "/citas/{CitaId:int?}"
 @inject TooltipService tooltipService
 
-<div>
-    <h1>Citas</h1><RadzenIcon Icon="help_outline" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions() {Duration = 10000, Text = "Seleccione un espacio vacío en el calendario para apartar una cita"}))"/>
+<div class="d-flex align-items-center">
+    <h1>Citas</h1>
+    <RadzenIcon Icon="help_outline" MouseEnter="@(args => ShowTooltip(args, "Seleccione un espacio vacío para crear una cita, o una existente para editarla."))" class="ms-3"/>
 </div>
-<div>
+<div class="mt-4">
     <div class="row align-items-center mb-3">
         <div class="col-1">
             <RadzenLabel Text="Filtro"/>
@@ -73,7 +74,7 @@
         }
     }
 
-    void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "Some content", options);
+    void ShowTooltip(ElementReference elementReference, string text, TooltipOptions options = null) => tooltipService.Open(elementReference, text, options);
 
     async void LoadCitaById(int? id)
     {
