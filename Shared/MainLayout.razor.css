@@ -2,12 +2,14 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 main {
     flex: 1;
     background: rgb(255, 255, 255);
     background: linear-gradient(167deg, rgba(255, 255, 255, 1) 0%, rgba(221, 228, 229, 0.8953782196472339) 55%, rgba(58, 102, 178, 0.6992997882746849) 87%, rgba(58, 178, 134, 0.7609244381346288) 96%);
+    width: 85%;
 }
 
 .sidebar {
@@ -53,7 +55,7 @@ main {
     }
 
     .sidebar {
-        width: 250px;
+        width: 15%;
         height: 100vh;
         position: sticky;
         top: 0;
